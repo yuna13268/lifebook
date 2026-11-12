@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모아온 | 펼치면 부모님 목소리가 들리는 책</title>
+<meta name="description" content="부모님은 말씀만 하세요. 질문부터 기록과 정리까지 대신해 한 권의 책과 가족 기록으로 만들어 드립니다. 정식 서비스 준비 중, 사전 예약을 받고 있습니다.">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="모아온 | 펼치면 부모님 목소리가 들리는 책">
+<meta property="og:description" content="부모님은 말씀만 하세요. 질문부터 기록과 정리까지 대신해 드립니다. 사전 예약 중.">
+<!-- TODO: 배포 후 og:url, og:image(1200x630) 추가 -->
+<style>
+/* 디자인 기준: Apple Store의 상품 판매 페이지 구성
+   - 연회색 바탕 위 흰 카드, 큰 제목, 앞부분만 진하게 쓰는 제목
+   - 옆으로 넘기는 카드, 옵션을 고르며 합계를 보는 구입 영역
+   - 색은 사용자가 준 녹색 팔레트(#9FB283, #5F8768, #2E5A4C, #283139)에서 행동 색 하나만 씀 */
+:root {
+  color-scheme: light;
+  --bg: #F5F5F7;
+  --card: #FFFFFF;
+  --ink: #1D1D1F;
+  --muted: #6E6E73;
+  --line: #D2D2D7;
+  --line-soft: #E8E8ED;
+  --action: #2E5A4C;
+  --action-hover: #24483C;
+  --green-text: #3F6A52;
+  --sage: #9FB283;
+  --sage-soft: #EEF2E8;
+  --charcoal: #283139;
+  --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", "맑은 고딕", sans-serif;
+  --r-card: 18px;
+  --r-ctl: 12px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--card); color: var(--ink); font: 400 17px/1.6 var(--sans); letter-spacing: -0.01em; word-break: keep-all; overflow-wrap: break-word; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+a { color: inherit; }
+svg { display: block; }
+:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; border-radius: 6px; }
+[id] { scroll-margin-top: 64px; }
+
+.wrap { width: min(100%, 1024px); margin-inline: auto; padding-inline: 20px; }
+.narrow { max-width: 780px; }
+section { padding-block: 72px; }
+.band { background: var(--bg); }
+h2 { font-size: clamp(1.75rem, 5.6vw, 2.5rem); line-height: 1.2; font-weight: 600; letter-spacing: -0.025em; color: var(--muted); margin-bottom: 32px; }
+h2 b { color: var(--ink); font-weight: 700; }
+.caption { margin-top: 16px; color: var(--muted); font-size: .82rem; line-height: 1.5; }
+.card { background: var(--card); border-radius: var(--r-card); padding: 28px 24px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* 버튼 */
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px; border: 0; border-radius: 980px; font: 500 1.02rem/1 var(--sans); text-decoration: none; cursor: pointer; transition: background-color .2s; }
+.btn-primary { background: var(--action); color: #fff; }
+.btn-primary:hover { background: var(--action-hover); }
+.btn-sm { min-height: 32px; padding: 0 14px; font-size: .82rem; }
+.btn[disabled] { opacity: .6; cursor: wait; }
+.link-more { color: var(--green-text); text-decoration: none; font-size: 1.02rem; }
+.link-more:hover { text-decoration: underline; }
+
+/* 상단 */
+.announce { background: var(--bg); color: var(--ink); text-align: center; font-size: .82rem; padding: 12px 16px; line-height: 1.4; }
+.site-header { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.86); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line-soft); }
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 52px; gap: 16px; }
+.logo { font-weight: 700; font-size: 1.12rem; text-decoration: none; letter-spacing: -0.02em; }
+.top-nav { display: none; gap: 28px; font-size: .82rem; }
+.top-nav a { color: var(--ink); opacity: .8; text-decoration: none; }
+.top-nav a:hover { opacity: 1; }
+
+/* 첫 화면 */
+.hero { padding-block: 56px 0; text-align: center; }
+.hero h1 { font-size: clamp(3rem, 12vw, 5.5rem); line-height: 1.05; font-weight: 700; letter-spacing: -0.035em; }
+.hero-sub { margin-top: 10px; font-size: clamp(1.3rem, 4.6vw, 1.9rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; }
+.hero-price { margin-top: 14px; color: var(--muted); font-size: 1rem; }
+.hero-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 24px; margin-top: 24px; }
+.stage { margin-top: 44px; }
+.stage-inner { position: relative; display: flex; justify-content: center; align-items: center; min-height: 420px; padding: 48px 20px 72px; background: linear-gradient(180deg, var(--bg) 0%, #ECEDEA 100%); border-radius: var(--r-card); overflow: hidden; }
+.stage .caption { text-align: center; }
+
+.book { position: relative; width: min(58vw, 240px); aspect-ratio: 3 / 4.1; padding: 24px 20px 20px 32px; display: flex; flex-direction: column; color: #F3F6EF; text-align: left; background: var(--action); border-radius: 3px 10px 10px 3px; box-shadow: 0 30px 50px -20px rgba(40,49,57,.45), 10px 10px 0 -2px #fff; transform: rotate(-3deg); }
+.book::before { content: ""; position: absolute; inset: 0 auto 0 13px; width: 2px; background: rgba(255,255,255,.18); }
+.book .kicker { font-size: .74rem; letter-spacing: .04em; opacity: .8; }
+.book .title { margin-top: 12px; font-size: clamp(1.5rem, 6.4vw, 2rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.03em; }
+.book .rule { width: 30px; height: 3px; background: var(--sage); margin-top: 14px; border-radius: 2px; }
+.book .foot { margin-top: 12px; font-size: .74rem; opacity: .8; }
+.voice-card { position: absolute; right: 16px; bottom: 24px; width: min(72vw, 250px); padding: 12px; display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: center; text-align: left; background: rgba(255,255,255,.9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.1); }
+.voice-card strong { display: block; font-size: .86rem; line-height: 1.3; }
+.voice-time { display: block; font-size: .76rem; color: var(--muted); }
+.qr { width: 100%; height: auto; aspect-ratio: 1; }
+.wave { display: flex; align-items: center; gap: 2px; height: 24px; margin-top: 4px; }
+.wave i { flex: 1; min-width: 1px; background: var(--line); border-radius: 2px; }
+.wave i.on { background: var(--action); }
+.voice-card .wave i:nth-child(-n+11) { background: var(--action); }
+
+/* 한 줄 사실 */
+.fact { text-align: center; padding-block: 96px; }
+.fact-num { font-size: clamp(2.6rem, 10vw, 4.5rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.1; }
+.fact-text { max-width: 30em; margin: 18px auto 0; color: var(--muted); font-size: 1.12rem; line-height: 1.6; }
+
+/* 옆으로 넘기는 카드 */
+.shelf { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; padding: 4px 20px 28px; scrollbar-width: none; }
+.shelf::-webkit-scrollbar { display: none; }
+.tile { flex: none; width: min(82vw, 320px); scroll-snap-align: start; display: flex; flex-direction: column; background: var(--card); border-radius: var(--r-card); padding: 26px 24px 24px; transition: box-shadow .3s, transform .3s; }
+.tile:hover { box-shadow: 2px 4px 16px rgba(0,0,0,.08); transform: scale(1.01); }
+.tile-no { font-size: .82rem; font-weight: 600; color: var(--muted); }
+.tile h3 { margin-top: 6px; font-size: 1.3rem; line-height: 1.3; font-weight: 700; letter-spacing: -0.02em; }
+.tile p { margin-top: 10px; color: var(--muted); font-size: .95rem; line-height: 1.55; flex: 1; }
+.tile-visual { margin-top: 22px; min-height: 108px; padding: 16px; background: var(--bg); border-radius: 12px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+.pick { flex-direction: row; flex-wrap: wrap; align-content: center; gap: 6px; }
+.pick span { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border-radius: 980px; background: var(--card); font-size: .82rem; }
+.pick span.on { background: var(--charcoal); color: #fff; }
+.bubble { align-self: flex-start; padding: 10px 14px; background: var(--card); border-radius: 4px 14px 14px 14px; font-size: .9rem; line-height: 1.45; }
+.bubble small { display: block; font-size: .74rem; font-weight: 600; color: var(--green-text); }
+.record { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--card); border-radius: 980px; }
+.rec-dot { flex: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--action); color: #fff; }
+.record .wave { flex: 1; margin: 0; }
+.record .wave i { background: var(--sage); }
+.scan { flex-direction: row; align-items: center; gap: 14px; }
+.scan .qr { width: 64px; flex: none; }
+.scan b { display: block; font-size: .92rem; }
+.scan span { font-size: .84rem; color: var(--muted); }
+
+/* 구성 고르기 */
+.notice { margin: -16px 0 28px; color: var(--muted); font-size: .92rem; }
+.buy-grid { display: grid; gap: 28px; }
+.buy-visual { display: none; }
+.buy-stage { display: flex; align-items: center; justify-content: center; min-height: 420px; background: var(--bg); border-radius: var(--r-card); }
+.book-sm { width: 200px; }
+.opt-title { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 14px; }
+.opt-title span { margin-left: 6px; font-size: .88rem; font-weight: 400; color: var(--muted); }
+.buy-options .opt-title + .addons { margin-top: 0; }
+.buy-options .anchors { margin: 14px 0 36px; color: var(--muted); font-size: .88rem; line-height: 1.5; }
+.plans { display: grid; gap: 12px; border: 0; padding: 0; margin: 0; min-width: 0; }
+.plan { position: relative; display: block; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r-ctl); cursor: pointer; transition: border-color .15s; }
+.plan:hover { border-color: #86868B; }
+.plan input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.plan:has(input:checked) { border-color: var(--action); box-shadow: inset 0 0 0 1px var(--action); }
+.plan:has(input:focus-visible) { outline: 2px solid var(--action); outline-offset: 3px; }
+.plan-tag { position: absolute; top: 18px; right: 20px; font-size: .74rem; font-weight: 600; color: var(--green-text); }
+.plan-name { display: block; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; padding-right: 48px; }
+.plan-sub { display: block; font-size: .88rem; color: var(--muted); }
+.plan-price { display: block; margin-top: 8px; font-size: 1rem; font-weight: 600; }
+.plan ul { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line-soft); display: grid; gap: 4px; }
+.plan li { font-size: .88rem; line-height: 1.5; color: var(--muted); padding-left: 14px; position: relative; }
+.plan li::before { content: ""; position: absolute; left: 2px; top: .68em; width: 4px; height: 4px; border-radius: 50%; background: var(--muted); }
+.addons { display: grid; gap: 12px; }
+.addon { display: grid; grid-template-columns: 22px 1fr; align-content: start; gap: 2px 12px; padding: 16px 18px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r-ctl); }
+.addon.is-on { border-color: var(--action); box-shadow: inset 0 0 0 1px var(--action); }
+.addon input[type=checkbox] { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--action); }
+.addon label { cursor: pointer; font-weight: 600; line-height: 1.4; }
+.addon label .price { display: block; font-weight: 400; color: var(--muted); font-size: .9rem; }
+.addon p { grid-column: 2; font-size: .86rem; line-height: 1.5; color: var(--muted); }
+.qty { grid-column: 2; display: none; align-items: center; gap: 8px; margin-top: 8px; font-size: .9rem; }
+.addon.is-on .qty { display: flex; }
+.qty button { width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--card); font: 500 1.05rem var(--sans); color: var(--ink); cursor: pointer; }
+.qty button:hover { border-color: #86868B; }
+.qty output { min-width: 40px; text-align: center; font-weight: 600; }
+.total-bar { position: sticky; bottom: 0; z-index: 5; margin: 32px -20px -72px; padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); display: grid; gap: 10px; background: rgba(255,255,255,.92); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--line-soft); }
+.total-break { font-size: .82rem; color: var(--muted); line-height: 1.4; }
+.total-line { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.total-line b { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+
+/* 질문 예시 */
+.question-wall { display: grid; column-gap: 32px; }
+.question-wall { row-gap: 10px; align-items: start; }
+.question-wall li { justify-self: start; max-width: 100%; padding: 12px 16px; background: var(--bg); border-radius: 18px 18px 18px 4px; font-size: 1rem; line-height: 1.5; }
+.question-wall li:nth-child(4n+2), .question-wall li:nth-child(4n+3) { background: var(--sage-soft); }
+@media (max-width: 719px) { .question-wall li:nth-child(n+7) { display: none; } }
+
+/* 책 안쪽 */
+.sample-grid { display: grid; gap: 16px; }
+.sample-grid .card { background: var(--bg); }
+.toc li { display: grid; grid-template-columns: 48px 1fr; padding: 10px 12px; border-radius: 10px; align-items: baseline; }
+.toc span { color: var(--muted); font-weight: 600; font-size: .84rem; }
+.toc b { display: block; font-weight: 600; }
+.toc em { display: block; color: var(--muted); font-style: normal; font-size: .9rem; line-height: 1.45; }
+.toc .active { background: var(--card); }
+.page .chap { font-size: .82rem; font-weight: 600; color: var(--muted); }
+.page h3 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 6px 0 14px; }
+.quote { font-size: 1.06rem; line-height: 1.85; }
+.quote span { transition: background-color .25s; border-radius: 4px; }
+.quote span.now { background: #DDE7D2; }
+.player { display: grid; grid-template-columns: 60px 1fr; gap: 14px; align-items: center; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.play { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 980px; background: var(--action); color: #fff; font: 500 .9rem var(--sans); cursor: pointer; }
+.play:hover { background: var(--action-hover); }
+.player .wave { margin-top: 10px; height: 28px; }
+
+/* 약속 */
+.promise-grid { display: grid; gap: 16px; }
+.promise h3 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.35; }
+.promise p { margin-top: 8px; color: var(--muted); font-size: .95rem; line-height: 1.55; }
+
+
+
+/* FAQ */
+.faq-list { border-top: 1px solid var(--line); }
+details { border-bottom: 1px solid var(--line); }
+summary { position: relative; padding: 20px 36px 20px 0; font-weight: 600; font-size: 1.05rem; cursor: pointer; list-style: none; line-height: 1.45; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; position: absolute; right: 4px; top: 16px; font: 300 1.5rem var(--sans); color: var(--muted); }
+details[open] summary::after { content: "−"; }
+details p { padding: 0 0 22px; color: var(--muted); }
+
+/* 마지막 */
+.final { text-align: center; padding-block: 96px; }
+.final h2 { color: var(--ink); font-weight: 700; margin-bottom: 0; }
+.final p { margin: 16px auto 28px; color: var(--muted); max-width: 30em; }
+
+/* 푸터 */
+.site-footer { background: var(--bg); border-top: 1px solid var(--line); padding-block: 24px 40px; font-size: .78rem; line-height: 1.7; color: var(--muted); }
+.site-footer nav { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-bottom: 10px; }
+.site-footer a { color: var(--ink); text-decoration: none; padding: 4px 0; }
+.site-footer a:hover { text-decoration: underline; }
+
+/* 신청 폼 */
+dialog { width: min(100%, 540px); max-width: 100%; max-height: 100dvh; margin: auto; padding: 0; border: 0; border-radius: 0; background: var(--card); color: var(--ink); }
+dialog::backdrop { background: rgba(0,0,0,.45); }
+.dlg-head { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: rgba(255,255,255,.92); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border-bottom: 1px solid var(--line-soft); }
+.dlg-head h2 { margin: 0; font-size: 1.2rem; color: var(--ink); font-weight: 700; }
+.close { width: 36px; height: 36px; margin-right: -6px; border: 0; border-radius: 50%; background: var(--bg); font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--ink); }
+.dlg-body { padding: 24px; }
+.field { margin-bottom: 22px; }
+.field > label, .field > .label { display: block; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
+.req { color: var(--muted); font-weight: 400; font-size: .8rem; margin-left: 4px; }
+input[type=text], select { width: 100%; min-height: 50px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-ctl); background: var(--card); color: var(--ink); font: 400 17px/1.4 var(--sans); }
+input[type=text]:focus, select:focus { border-color: var(--action); outline: 2px solid rgba(46,90,76,.25); outline-offset: 0; }
+[aria-invalid=true] { border-color: #D70015 !important; }
+.err { display: none; color: #D70015; font-size: .86rem; margin-top: 6px; }
+.err.show { display: block; }
+.choice { display: flex; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 0; min-width: 0; }
+.choice legend { padding: 0; font-weight: 600; margin-bottom: 8px; }
+.choice label { display: flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid var(--line); border-radius: 980px; background: var(--card); cursor: pointer; font-size: .92rem; }
+.choice label:has(input:checked) { border-color: var(--action); box-shadow: inset 0 0 0 1px var(--action); font-weight: 600; }
+.choice label:has(input:focus-visible) { outline: 2px solid var(--action); outline-offset: 2px; }
+.choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+#formAddons { gap: 8px; }
+#formAddons .addon { padding: 12px 14px; }
+.form-total { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 16px 18px; margin-bottom: 20px; background: var(--bg); border-radius: var(--r-ctl); }
+.form-total b { font-size: 1.35rem; font-weight: 700; }
+.consent { padding: 16px 18px; background: var(--bg); border-radius: var(--r-ctl); margin-bottom: 18px; }
+.consent-check { display: grid; grid-template-columns: 22px 1fr; gap: 10px; font-weight: 600; line-height: 1.45; cursor: pointer; }
+.consent-check input { width: 20px; height: 20px; margin: 0; accent-color: var(--action); }
+.consent dl { margin-top: 10px; font-size: .84rem; line-height: 1.55; color: var(--muted); display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; }
+.consent dt { font-weight: 600; }
+.consent a { color: var(--green-text); }
+.consent .src { margin-top: 8px; font-size: .82rem; color: var(--muted); }
+.todo { background: #FFE9A8; color: #4A3700; padding: 0 3px; border-radius: 2px; }
+.form-error { display: none; padding: 12px 14px; margin-bottom: 14px; background: #FFF0F0; color: #D70015; border-radius: var(--r-ctl); font-size: .9rem; }
+.form-error.show { display: block; }
+.btn-full { width: 100%; }
+.pay-note { margin-top: 10px; text-align: center; font-size: .84rem; color: var(--muted); }
+.done { text-align: center; padding: 28px 8px; }
+.done h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
+.done p { color: var(--muted); margin-bottom: 20px; }
+.test-note { text-align: left; padding: 12px 14px; background: #FFF4CF; color: #4A3700; border-radius: var(--r-ctl); font-size: .88rem; line-height: 1.55; margin-bottom: 20px; }
+
+
+/* 접근성: 본문 바로가기 */
+.skip-link { position: absolute; left: 12px; top: -48px; z-index: 50; padding: 10px 16px; background: var(--ink); color: #fff; border-radius: 10px; text-decoration: none; }
+.skip-link:focus { top: 12px; }
+.shelf:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; border-radius: 12px; }
+.btn-secondary { background: var(--bg); color: var(--ink); }
+.btn-secondary:hover { background: var(--line-soft); }
+
+/* 1년 달력 */
+.year { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px 10px; max-width: 760px; margin: 36px auto 8px; }
+.mo span { display: block; font-size: .72rem; color: var(--muted); margin-bottom: 6px; text-align: left; }
+.mo .dots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; }
+.mo i { aspect-ratio: 1; border-radius: 50%; background: var(--line-soft); }
+.mo i.met { background: var(--action); transform: scale(1.35); }
+
+/* 약속 아이콘 */
+.p-icon { width: 30px; height: 30px; color: var(--action); margin-bottom: 14px; }
+
+/* 구성 고르기: 패키지별 그림 */
+.buy-stage { position: relative; }
+.buy-stage .book { position: absolute; transition: opacity .35s, transform .35s; }
+.buy-stage .book-1 { transform: rotate(-3deg); }
+.buy-stage .book-2 { opacity: 0; transform: translateX(0) rotate(-3deg); background: var(--charcoal); }
+.buy-stage[data-books="2"] .book-1 { transform: translateX(-60px) rotate(-6deg); }
+.buy-stage[data-books="2"] .book-2 { opacity: 1; transform: translateX(70px) rotate(4deg); }
+.buy-stage[data-books="0"] .book { opacity: 0; transform: translateY(20px) rotate(-3deg); }
+.stage-phone { position: absolute; width: 200px; padding: 18px 16px; background: #fff; border-radius: 22px; box-shadow: 0 20px 40px -18px rgba(40,49,57,.35); display: grid; gap: 10px; opacity: 0; transition: opacity .35s; }
+.buy-stage[data-books="0"] .stage-phone { opacity: 1; }
+.sp-title { font-weight: 700; font-size: .95rem; }
+.sp-row { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--muted); }
+.sp-row i { width: 22px; height: 22px; border-radius: 50%; background: var(--sage-soft); position: relative; flex: none; }
+.sp-row i::after { content: ""; position: absolute; left: 8px; top: 6px; border-left: 7px solid var(--action); border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+.plan-books { display: flex; align-items: center; gap: 4px; margin-top: 8px; }
+.plan-books i { width: 12px; height: 16px; background: var(--action); border-radius: 1px 3px 3px 1px; }
+.plan-books i + i { background: var(--charcoal); }
+.plan-books em { font-style: normal; font-size: .8rem; color: var(--muted); margin-left: 4px; }
+
+/* 비교 그림 */
+.cmp-grid { display: grid; gap: 14px; }
+.cmp { background: var(--bg); border-radius: var(--r-card); padding: 24px 22px; }
+.cmp.ours { background: var(--sage-soft); box-shadow: inset 0 0 0 2px var(--action); }
+.cmp h3 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; }
+.cmp-list { margin-top: 16px; display: grid; gap: 12px; }
+.cmp-list li { position: relative; padding-left: 34px; font-size: .95rem; line-height: 1.45; }
+.cmp-list li::before { position: absolute; left: 0; top: -1px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: .82rem; font-weight: 700; }
+.cmp-list li.yes::before { content: "✓"; background: var(--action); color: #fff; }
+.cmp-list li.no::before { content: "✕"; background: #fff; color: #86868B; box-shadow: inset 0 0 0 1px var(--line); }
+.cmp-list li.no { color: var(--muted); }
+.cmp-list li.part::before { content: "△"; background: #fff; color: var(--green-text); box-shadow: inset 0 0 0 1px var(--sage); }
+.cmp-list small { display: block; font-size: .8rem; color: var(--muted); }
+.cmp-con { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,.08); font-size: .86rem; color: #58585D; }
+.price-chart { margin-top: 16px; background: var(--bg); }
+.price-chart figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 18px; }
+.price-chart figcaption b { font-size: 1.2rem; }
+.price-chart figcaption span { font-size: .84rem; color: var(--muted); }
+.pc-row, .pc-axis { display: grid; grid-template-columns: 92px 1fr; grid-template-areas: "name val" "track track"; gap: 6px 12px; align-items: center; margin-bottom: 18px; }
+.pc-name { grid-area: name; font-weight: 600; font-size: .9rem; }
+.pc-val { grid-area: val; font-size: .84rem; color: var(--muted); text-align: right; }
+.pc-track { grid-area: track; position: relative; height: 14px; background: #fff; border-radius: 7px; }
+.pc-bar { position: absolute; top: 0; bottom: 0; border-radius: 7px; background: var(--charcoal); }
+.pc-bar.ours { background: var(--action); }
+.pc-bar.fade { background: linear-gradient(90deg, #86868B 0%, #86868B 55%, rgba(134,134,139,.15) 100%); }
+.pc-dot { position: absolute; top: 1px; width: 12px; height: 12px; border-radius: 50%; background: #86868B; }
+.pc-axis { margin: -6px 0 0; }
+.pc-axis > span { grid-area: name; }
+.pc-axis div { grid-area: track; display: flex; justify-content: space-between; font-size: .72rem; color: var(--muted); }
+
+/* 쿠키 배너 */
+.cookie { position: fixed; z-index: 40; left: 12px; right: 12px; bottom: 12px; padding: 16px 18px; background: rgba(255,255,255,.96); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border: 1px solid var(--line-soft); border-radius: var(--r-card); box-shadow: 0 12px 32px rgba(0,0,0,.14); display: grid; gap: 12px; }
+.cookie[hidden] { display: none; }
+.cookie p { font-size: .88rem; line-height: 1.5; }
+.cookie a { color: var(--green-text); }
+.cookie-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.cookie-actions .btn { min-height: 40px; padding: 0 20px; font-size: .9rem; }
+.consent-2 { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+@media (min-width: 720px) {
+  .year { grid-template-columns: repeat(12, 1fr); }
+  .cmp-grid { grid-template-columns: repeat(3, 1fr); }
+  .pc-row, .pc-axis { grid-template-columns: 110px 1fr 220px; grid-template-areas: "name track val"; }
+  .pc-val { text-align: left; }
+  .pc-axis { grid-template-areas: "name track ."; }
+  .cookie { left: auto; right: 24px; bottom: 24px; max-width: 420px; }
+}
+
+/* 스크롤 페이드인 */
+.js .reveal { opacity: 0; transform: translateY(20px); transition: opacity .8s ease, transform .8s ease; }
+.js .reveal.seen { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .tile, .tile:hover { transition: none; transform: none; }
+}
+
+@media (min-width: 720px) {
+  section { padding-block: 100px; }
+  .card { padding: 36px 40px; }
+  .question-wall { grid-template-columns: 1fr 1fr; }
+  .promise-grid { grid-template-columns: 1fr 1fr; }
+  .sample-grid { grid-template-columns: .8fr 1.2fr; }
+  .total-bar { margin: 40px 0 -48px; padding: 16px 24px; grid-template-columns: 1fr auto; align-items: center; border: 1px solid var(--line-soft); border-radius: var(--r-card); }
+  .total-bar .btn { grid-column: 2; grid-row: 1 / span 2; }
+  .total-line { justify-content: flex-start; gap: 14px; }
+  dialog { border-radius: var(--r-card); max-height: 90dvh; }
+  .stage-inner { min-height: 520px; }
+  .book { width: 280px; }
+  .voice-card { bottom: 48px; right: calc(50% - 230px); }
+}
+@media (min-width: 960px) {
+  .top-nav { display: flex; }
+  .shelf { padding-inline: max(20px, calc((100vw - 1024px) / 2 + 20px)); scroll-padding-inline: max(20px, calc((100vw - 1024px) / 2 + 20px)); }
+  .buy-grid { grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: start; }
+  .buy-visual { display: block; position: sticky; top: 76px; }
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<a class="skip-link" href="#top">본문 바로가기</a>
+<div class="announce">정식 오픈 전 사전 예약 중입니다. 결제 없이 신청만 받습니다.</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="#top">모아온</a>
+    <nav class="top-nav" aria-label="주요 메뉴">
+      <a href="#how">작동 방식</a>
+      <a href="#buy">구성과 가격</a>
+      <a href="#inside">책 안쪽</a>
+      <a href="#faq">자주 묻는 질문</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#buy" data-cta="header">사전 예약</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- 첫 화면: 상품 이름, 한 줄 설명, 시작 가격, 상품 그림 -->
+<section class="hero">
+  <div class="wrap">
+    <h1>모아온</h1>
+    <p class="hero-sub">펼치면 부모님 목소리가 들리는 책.</p>
+    <p class="hero-price"><span data-from-price>29만원</span>부터 · 지금은 결제 없이 사전 예약</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#buy" data-cta="hero">구성 고르기</a>
+      <a class="link-more" href="#inside" data-sample="hero">책 안쪽 보기 <span aria-hidden="true">›</span></a>
+    </div>
+    <figure class="stage">
+      <!-- 이미지 교체 자리: 실제 책 사진이 준비되면 .stage 안을 <img>로 교체 -->
+      <div class="stage-inner" aria-hidden="true">
+        <div class="book">
+          <span class="kicker">우리 가족의 기록</span>
+          <span class="title">어머니의<br>이야기</span>
+          <span class="rule"></span>
+          <span class="foot">어린 시절부터 오늘까지</span>
+        </div>
+        <div class="voice-card">
+          <svg class="qr" data-qr viewBox="0 0 25 25"></svg>
+          <div>
+            <strong>3장 · 첫 출근하던 날</strong>
+            <span class="voice-time">1분 12초</span>
+            <div class="wave" data-wave="26"></div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="caption">완성품 사진을 대신한 예시 그림입니다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 한 줄 사실 -->
+<section class="fact">
+  <div class="wrap reveal">
+    <p class="fact-num">1년에 12번.</p>
+    <div class="year" id="year" role="img" aria-label="1년의 날들을 점으로 그리고, 부모님을 만나는 날 12일만 초록색으로 표시한 그림"></div>
+    <p class="fact-text">따로 사는 부모님을 만나는 횟수의 중위값입니다. 그 열두 번 동안 어린 시절이나 첫 직장 이야기를 일부러 여쭤보기는 쉽지 않습니다.</p>
+    <p class="caption">출처: 한국복지패널</p>
+  </div>
+</section>
+
+<!-- 작동 방식: 옆으로 넘기는 카드 -->
+<section class="band" id="how">
+  <div class="wrap reveal">
+    <h2><b>작동 방식.</b> 부모님은 말씀만 하시면 됩니다.</h2>
+  </div>
+  <div class="shelf reveal" role="list" tabindex="0" aria-label="작동 방식 4단계. 좌우로 넘겨 보세요">
+    <article class="tile" role="listitem">
+      <span class="tile-no">1</span>
+      <h3>여쭤볼 질문을 고릅니다.</h3>
+      <p>부모님의 나이와 직업에 맞춘 질문 목록에서 고르고, 직접 여쭙고 싶던 질문도 넣습니다.</p>
+      <div class="tile-visual pick" aria-hidden="true"><span class="on">첫 월급 받던 날</span><span class="on">결혼식 날 날씨</span><span>내 이름을 지은 사연</span></div>
+    </article>
+    <article class="tile" role="listitem">
+      <span class="tile-no">2</span>
+      <h3>질문이 오면 말로 답합니다.</h3>
+      <p>매주 카카오톡이나 문자로 질문이 갑니다. 링크를 누르고 녹음 버튼만 누르면 됩니다.</p>
+      <div class="tile-visual" aria-hidden="true">
+        <div class="bubble"><small>이번 주 질문</small>첫 월급을 받으신 날, 가장 먼저 무엇을 하셨어요?</div>
+      </div>
+    </article>
+    <article class="tile" role="listitem">
+      <span class="tile-no">3</span>
+      <h3>녹음이 글로 정리됩니다.</h3>
+      <p>말투는 살려 읽기 좋은 문장으로 다듬고, 가족이 읽어 보고 고칠 수 있습니다.</p>
+      <div class="tile-visual" aria-hidden="true">
+        <div class="record"><span class="rec-dot"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15a4 4 0 0 0 4-4V6a4 4 0 0 0-8 0v5a4 4 0 0 0 4 4Zm7-4a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.9V21a1 1 0 1 0 2 0v-3.1A7 7 0 0 0 19 11Z"/></svg></span><div class="wave" data-wave="22"></div></div>
+      </div>
+    </article>
+    <article class="tile" role="listitem">
+      <span class="tile-no">4</span>
+      <h3>책을 받고, QR로 다시 듣습니다.</h3>
+      <p>이야기는 어린 시절부터 지금까지 순서대로 엮이고, 이야기마다 그날의 녹음이 QR로 남습니다.</p>
+      <div class="tile-visual scan" aria-hidden="true"><svg class="qr" data-qr viewBox="0 0 25 25"></svg><div><b>QR을 찍으면</b><span>어머니 목소리로 재생</span></div></div>
+    </article>
+  </div>
+</section>
+
+<!-- 구입하기: 옵션을 고르며 합계를 보는 구성 -->
+<section class="pricing" id="buy">
+  <div class="wrap">
+    <h2><b>구성 고르기.</b> 꼭 맞는 기록으로.</h2>
+    <p class="notice">지금은 결제되지 않습니다. 아래는 정식 오픈 전 예상 가격이며, 실제 가격은 달라질 수 있습니다.</p>
+    <div class="buy-grid">
+      <div class="buy-visual" aria-hidden="true">
+        <div class="buy-stage" data-books="1">
+          <div class="stage-phone">
+            <span class="sp-title">녹음과 글로 보관</span>
+            <span class="sp-row"><i></i>1장 · 어린 시절</span>
+            <span class="sp-row"><i></i>2장 · 학창시절</span>
+            <span class="sp-row"><i></i>3장 · 첫 출근하던 날</span>
+          </div>
+          <div class="book book-sm book-2">
+            <span class="kicker">우리 가족의 기록</span>
+            <span class="title">아버지의<br>이야기</span>
+            <span class="rule"></span>
+          </div>
+          <div class="book book-sm book-1">
+            <span class="kicker">우리 가족의 기록</span>
+            <span class="title">어머니의<br>이야기</span>
+            <span class="rule"></span>
+          </div>
+        </div>
+        <p class="caption">예시 그림</p>
+      </div>
+      <div class="buy-options">
+        <h3 class="opt-title">패키지</h3>
+        <fieldset class="plans" id="plans" aria-label="패키지 선택"></fieldset>
+        <p class="anchors">국내 전문 자서전 제작은 보통 49만원부터 99만원 이상입니다. <span id="anchorBook"></span></p>
+
+        <h3 class="opt-title">추가 선택 <span>필요한 것만 고르세요</span></h3>
+        <div class="addons" id="pricingAddons"></div>
+      </div>
+    </div>
+    <div class="total-bar">
+      <div>
+        <div class="total-break" data-breakdown></div>
+        <div class="total-line" aria-live="polite"><span>총 예상 금액</span><b data-total></b></div>
+      </div>
+      <button class="btn btn-primary" type="button" data-open-form="pricing">이 구성으로 사전 예약</button>
+    </div>
+  </div>
+</section>
+
+<!-- 질문 예시 -->
+<section class="band" id="questions">
+  <div class="wrap reveal">
+    <h2><b>질문 예시.</b> 이런 질문이 매주 하나씩 도착합니다.</h2>
+    <div class="card">
+      <ul class="question-wall">
+        <li>제 이름은 누가, 왜 그렇게 지으셨어요?</li>
+        <li>어릴 때 살던 동네에서 제일 좋아하던 곳은 어디였어요?</li>
+        <li>학교 다닐 때 도시락 반찬은 주로 뭐였어요?</li>
+        <li>처음 서울(또는 큰 도시)에 갔던 날이 기억나세요?</li>
+        <li>첫 월급으로 가장 먼저 산 게 뭐였어요?</li>
+        <li>엄마(아빠)를 처음 만난 날 어떤 옷을 입고 있었어요?</li>
+        <li>결혼식 날 날씨는 어땠어요?</li>
+        <li>저를 처음 안았을 때 무슨 생각이 들었어요?</li>
+        <li>살면서 가장 힘들었던 해는 언제였고, 어떻게 버티셨어요?</li>
+        <li>지금 다시 스무 살이 된다면 해 보고 싶은 일이 있어요?</li>
+        <li>손주들에게 꼭 전해 주고 싶은 말이 있다면요?</li>
+        <li>요즘 하루 중 가장 좋은 시간은 언제예요?</li>
+      </ul>
+      <p class="caption">질문 목록은 부모님께 맞게 바꿀 수 있고, 가족이 직접 쓴 질문도 함께 보내 드립니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 책 안쪽 -->
+<section id="inside">
+  <div class="wrap reveal">
+    <h2><b>책 안쪽.</b> 읽다가 QR을 찍으면 그 목소리가 나옵니다.</h2>
+    <div class="sample-grid">
+      <div class="card">
+        <ol class="toc">
+          <li><span>1장</span><div><b>어린 시절</b><em>살던 동네와 가장 좋아하던 놀이</em></div></li>
+          <li><span>2장</span><div><b>학창시절</b><em>기억에 남는 선생님과 친구</em></div></li>
+          <li class="active"><span>3장</span><div><b>직장</b><em>첫 출근하던 날</em></div></li>
+          <li><span>4장</span><div><b>결혼</b><em>처음 만난 날의 풍경</em></div></li>
+          <li><span>5장</span><div><b>자녀</b><em>아이가 태어나던 날</em></div></li>
+          <li><span>6장</span><div><b>현재</b><em>요즘 가장 감사한 일</em></div></li>
+        </ol>
+      </div>
+      <article class="card page">
+        <span class="chap">3장 · 직장</span>
+        <h3>첫 출근하던 날</h3>
+        <p class="quote" id="quote"><span>그해 봄에 처음 출근을 했어. </span><span>새로 산 구두가 작아서 발이 얼마나 아프던지. </span><span>그래도 버스에서 내려 회사 간판을 보는데, </span><span>괜히 어깨가 펴지더라.</span></p>
+        <div class="player">
+          <svg class="qr" data-qr viewBox="0 0 25 25" role="img" aria-label="책 페이지에 인쇄되는 QR 코드 모양의 예시 그림"></svg>
+          <div>
+            <button class="play" id="playBtn" type="button" aria-pressed="false">
+              <svg id="playIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l15 8-15 8z"/></svg>
+              <span id="playText">재생 화면 보기</span>
+            </button>
+            <div class="wave" id="demoWave" data-wave="38" aria-hidden="true"></div>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p class="caption">목차와 문장은 이해를 돕기 위해 만든 가상의 예시이며, 재생 화면에서는 소리가 나오지 않습니다.</p>
+  </div>
+</section>
+
+<!-- 모아온만의 차이 -->
+<section class="band" id="trust">
+  <div class="wrap reveal">
+    <h2><b>모아온의 약속.</b> 부모님의 목소리는 가족의 것입니다.</h2>
+    <div class="promise-grid">
+      <div class="card promise"><svg class="p-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1 10-10-3-3L5 16l-1 4z"/><path d="M3 3l18 18"/></svg><h3>글쓰기도, 앱 설치도 없습니다.</h3><p>휴대폰으로 온 링크를 누르고 말씀하시면 됩니다. 회원가입과 비밀번호도 필요 없습니다.</p></div>
+      <div class="card promise"><svg class="p-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><h3>AI 학습에 쓰지 않습니다.</h3><p>녹음과 이야기는 책을 만드는 데에만 씁니다.</p></div>
+      <div class="card promise"><svg class="p-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg><h3>원본 녹음을 내려받을 수 있습니다.</h3><p>정리된 글과 녹음 원본을 언제든 가족의 기기에 저장할 수 있습니다.</p></div>
+      <div class="card promise"><svg class="p-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15 14.5c3 .2 6 2.4 6 5.5"/></svg><h3>초대한 가족만 봅니다.</h3><p>기록은 가족 밖으로 공개되지 않고 암호화해 보관하며, 원하실 때 삭제할 수 있습니다.</p></div>
+    </div>
+    <p class="caption">위 내용은 정식 서비스에 적용할 원칙입니다. 지금 사전 예약 단계에서는 음성이나 사진을 받지 않습니다.</p>
+  </div>
+</section>
+
+<!-- 비교: 표 대신 그림으로 -->
+<section id="compare">
+  <div class="wrap reveal">
+    <h2><b>다른 방법과 비교.</b> 무엇이 다른지 한눈에.</h2>
+    <div class="cmp-grid">
+      <article class="cmp ours">
+        <h3>모아온</h3>
+        <ul class="cmp-list">
+          <li class="yes"><span class="sr-only">가능: </span>부모님이 직접 쓰지 않아도 돼요</li>
+          <li class="yes"><span class="sr-only">가능: </span>부모님 목소리가 책에 남아요</li>
+          <li class="yes"><span class="sr-only">가능: </span>자녀가 따로 시간을 내지 않아도 돼요</li>
+        </ul>
+        <p class="cmp-con">아쉬운 점 · 매주 쌓는 방식이라 몇 주 이상 걸려요</p>
+      </article>
+      <article class="cmp">
+        <h3>부모님 100문답 책</h3>
+        <ul class="cmp-list">
+          <li class="no"><span class="sr-only">안 됨: </span>부모님이 직접 쓰지 않아도 돼요</li>
+          <li class="no"><span class="sr-only">안 됨: </span>부모님 목소리가 책에 남아요</li>
+          <li class="no"><span class="sr-only">안 됨: </span>자녀가 따로 시간을 내지 않아도 돼요</li>
+        </ul>
+        <p class="cmp-con">아쉬운 점 · 바쁘면 끝까지 채우기 어려워요</p>
+      </article>
+      <article class="cmp">
+        <h3>자서전 대필</h3>
+        <ul class="cmp-list">
+          <li class="yes"><span class="sr-only">가능: </span>부모님이 직접 쓰지 않아도 돼요</li>
+          <li class="part"><span class="sr-only">일부: </span>부모님 목소리가 책에 남아요<small>녹음 파일만 따로 받는 경우가 있어요</small></li>
+          <li class="yes"><span class="sr-only">가능: </span>자녀가 따로 시간을 내지 않아도 돼요</li>
+        </ul>
+        <p class="cmp-con">아쉬운 점 · 비용이 커요</p>
+      </article>
+    </div>
+
+    <figure class="price-chart card">
+      <figcaption><b>비용</b><span>세 방법을 같은 눈금(0원~300만원)에 놓았습니다</span></figcaption>
+      <div class="pc-row">
+        <span class="pc-name">모아온</span>
+        <div class="pc-track"><i class="pc-bar ours" id="barOurs" style="left:9.7%;width:36.7%"></i></div>
+        <span class="pc-val" id="barOursLabel">29만원~139만원 (예상)</span>
+      </div>
+      <div class="pc-row">
+        <span class="pc-name">100문답 책</span>
+        <div class="pc-track"><i class="pc-dot" style="left:0.6%"></i></div>
+        <span class="pc-val">책 한 권 값</span>
+      </div>
+      <div class="pc-row">
+        <span class="pc-name">자서전 대필</span>
+        <div class="pc-track"><i class="pc-bar fade" style="left:16.3%;width:83.7%"></i></div>
+        <span class="pc-val">49만원부터, 출간까지 맡기면 수백만 원</span>
+      </div>
+      <div class="pc-axis" aria-hidden="true"><span></span><div><span>0</span><span>100만</span><span>200만</span><span>300만+</span></div></div>
+    </figure>
+    <p class="caption">자서전 대필 가격은 국내 대필 서비스의 공개 가격을 기준으로 했습니다. 해외에서는 비슷한 서비스가 이미 많이 쓰여, Storyworth로 인쇄된 책은 100만 권이 넘고 Remento에는 100만 개가 넘는 이야기가 기록되었습니다.</p>
+  </div>
+</section>
+
+<!-- FAQ: 미정 항목은 확정된 것처럼 쓰지 않음 -->
+<section id="faq">
+  <div class="wrap narrow reveal">
+    <h2><b>자주 묻는 질문.</b></h2>
+    <div class="faq-list">
+      <details open><summary>AI가 우리 부모님 이야기를 학습하나요?</summary><p>아니요. 부모님의 목소리와 이야기는 AI 학습에 사용되지 않습니다. 말씀을 글로 옮기고 정리하는 등 책을 만드는 데에만 사용합니다.</p></details>
+      <details><summary>지금 신청하면 바로 결제되나요?</summary><p>아니요. 지금은 사전 예약만 받고 있어 결제되지 않습니다. 정식 오픈 때 연락을 받으신 뒤 이용 여부를 정하시면 됩니다.</p></details>
+      <details><summary>신청은 제가 하는데, 부모님은 어떻게 시작하시나요?</summary><p>자녀분이 신청하고 부모님 연락처를 등록하면, 그 주부터 부모님 휴대폰으로 질문이 갑니다. 부모님이 녹음하신 이야기는 신청하신 분과 초대한 가족도 바로 듣고 읽을 수 있습니다.</p></details>
+      <details><summary>사전 예약을 하면 무엇이 달라지나요?</summary><p>정식 오픈 소식과 확정 가격을 가장 먼저 받습니다. 그 외의 혜택은 아직 정하지 않았고, 정해지면 사전 예약자께 먼저 알려 드립니다.</p></details>
+      <details><summary>부모님이 스마트폰을 잘 못 다루셔도 괜찮을까요?</summary><p>카카오톡이나 문자로 온 링크를 누르고 녹음 버튼만 누르면 되도록 만들고 있습니다. 직접 하시기 어렵다면 인터뷰어 연결을 더하실 수 있습니다.</p></details>
+      <details><summary>사투리나 발음도 잘 알아듣나요?</summary><p>사투리와 어르신의 말투를 얼마나 정확하게 옮기는지는 정식 오픈 전에 실제 녹음으로 확인할 예정입니다. 글로 옮긴 내용은 가족이 고칠 수 있고, 원래 목소리는 그대로 QR로 남습니다.</p></details>
+      <details><summary>말씀하고 싶지 않은 이야기는 빼도 되나요?</summary><p>네. 답하고 싶지 않은 질문은 넘기면 되고, 부모님과 가족이 원치 않는 이야기는 책에서 뺄 수 있게 할 계획입니다.</p></details>
+      <details><summary>시작부터 책을 받기까지 얼마나 걸리나요?</summary><p>매주 질문에 답하며 이야기를 쌓는 방식이라 몇 주 이상이 걸립니다. 정확한 기간과 인쇄·배송 일정은 정식 오픈 전에 정해 사전 예약자께 먼저 안내합니다.</p></details>
+      <details><summary>서비스가 문을 닫으면 기록은 어떻게 되나요?</summary><p>녹음 원본과 글은 언제든 내려받을 수 있게 할 계획이고, 실물 책은 그대로 남습니다. 서비스를 종료하게 되면 내려받을 기간을 충분히 두고 미리 알려 드립니다.</p></details>
+      <details><summary>가격은 이대로 확정인가요?</summary><p>아직 확정되지 않은 예상 가격입니다. 사전 예약과 조사 결과를 반영해 조정될 수 있으며, 확정되면 사전 예약자께 먼저 안내합니다.</p></details>
+      <details><summary>부모님 두 분을 함께 진행할 수 있나요?</summary><p>네. 두 분 모아온은 두 분의 이야기를 각각 기록하고 실물 책 두 권으로 만드는 구성입니다.</p></details>
+      <details><summary>환불은 어떻게 되나요?</summary><p>지금은 결제가 없어 환불할 금액도 없습니다. 정식 서비스의 환불 기준은 결제 전에 확인하실 수 있도록 안내합니다.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- 마지막 -->
+<section class="final band">
+  <div class="wrap reveal">
+    <h2>기록은 나중에도 만들 수 있지만,<br>물어보는 건 지금 할 수 있습니다.</h2>
+    <p>사전 예약을 남겨 주시면 정식 오픈 때 가장 먼저 연락드리겠습니다.</p>
+    <button class="btn btn-primary" type="button" data-open-form="final">사전 예약하기</button>
+    <p class="caption">결제 정보는 받지 않습니다.</p>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <nav aria-label="약관 및 정책">
+      <a href="privacy.html"><b>개인정보처리방침</b></a>
+      <a href="terms.html">이용약관</a>
+      <a href="privacy.html#cookies">쿠키 정책</a>
+      <a href="#" data-cookie-settings>쿠키 설정</a>
+      <a href="delete.html">개인정보 삭제·수신 거부</a>
+    </nav>
+    <p>모아온 · 정식 서비스 준비 중</p>
+    <p>운영자 박유나 · 문의 <a href="mailto:pyn0802@korea.ac.kr">pyn0802@korea.ac.kr</a></p>
+    <p>서비스 개선을 위해 방문과 버튼 클릭 기록을 모읍니다. 이 기록에는 이름과 연락처가 포함되지 않으며, 브라우저에 ID를 저장하는 것은 허용하신 경우에만 합니다.</p>
+  </div>
+</footer>
+
+<!-- 사전 예약 폼 -->
+<div class="cookie" id="cookieBanner" role="region" aria-label="쿠키 안내" hidden>
+  <p>방문 통계를 위해 이 브라우저에 무작위 ID를 저장해도 될까요? 이름이나 연락처는 담기지 않습니다. <a href="privacy.html#cookies">쿠키 정책</a></p>
+  <div class="cookie-actions">
+    <button class="btn btn-secondary btn-sm" type="button" data-consent="denied">거부</button>
+    <button class="btn btn-primary btn-sm" type="button" data-consent="granted">허용</button>
+  </div>
+</div>
+
+<dialog id="reserveDialog" aria-labelledby="dlgTitle">
+  <div class="dlg-head">
+    <h2 id="dlgTitle">사전 예약</h2>
+    <button class="close" type="button" id="closeDialog" aria-label="닫기">×</button>
+  </div>
+  <div class="dlg-body">
+    <form id="reserveForm" novalidate>
+      <div class="field">
+        <label for="fName">이름<span class="req">필수</span></label>
+        <input type="text" id="fName" name="name" autocomplete="name" aria-describedby="eName">
+        <p class="err" id="eName">이름을 입력해 주세요.</p>
+      </div>
+      <div class="field">
+        <label for="fContact">연락처 또는 이메일<span class="req">필수</span></label>
+        <input type="text" id="fContact" name="contact" autocomplete="on" placeholder="휴대폰 번호 또는 이메일" aria-describedby="eContact">
+        <p class="err" id="eContact">휴대폰 번호나 이메일을 정확히 입력해 주세요.</p>
+      </div>
+      <div class="field">
+        <fieldset class="choice" id="fAge" aria-describedby="eAge">
+          <legend>부모님 연령대<span class="req">필수</span></legend>
+          <label><input type="radio" name="parentAge" value="60대">60대</label>
+          <label><input type="radio" name="parentAge" value="70대">70대</label>
+          <label><input type="radio" name="parentAge" value="80대 이상">80대 이상</label>
+          <label><input type="radio" name="parentAge" value="기타">기타</label>
+        </fieldset>
+        <p class="err" id="eAge">부모님 연령대를 선택해 주세요.</p>
+      </div>
+      <div class="field">
+        <fieldset class="choice" id="fReason" aria-describedby="eReason">
+          <legend>관심을 갖게 된 계기<span class="req">필수</span></legend>
+          <label><input type="radio" name="reason" value="생신">생신</label>
+          <label><input type="radio" name="reason" value="환갑">환갑</label>
+          <label><input type="radio" name="reason" value="칠순">칠순</label>
+          <label><input type="radio" name="reason" value="어버이날">어버이날</label>
+          <label><input type="radio" name="reason" value="그냥">그냥</label>
+        </fieldset>
+        <p class="err" id="eReason">계기를 하나 선택해 주세요.</p>
+      </div>
+      <div class="field">
+        <label for="fPackage">패키지<span class="req">필수</span></label>
+        <select id="fPackage" name="package"></select>
+      </div>
+      <div class="field">
+        <span class="label">부가 서비스 <span class="req" style="color:var(--ink-2)">선택</span></span>
+        <div class="addons" id="formAddons" style="margin-top:0"></div>
+      </div>
+      <div class="form-total" aria-live="polite"><span>총 예상 금액</span><b data-total></b></div>
+      <div class="consent">
+        <label class="consent-check">
+          <input type="checkbox" id="fConsent" name="consent" aria-describedby="eConsent">
+          <span>개인정보 수집·이용에 동의합니다 <span class="req">필수</span></span>
+        </label>
+        <dl>
+          <dt>항목</dt><dd>이름, 연락처 또는 이메일, 부모님 연령대, 선택 상품, 관심 계기</dd>
+          <dt>목적</dt><dd>사전 예약 안내와 서비스 수요 조사</dd>
+          <dt>보유 기간</dt><dd>2026년 12월 31일까지 보관 후 파기</dd>
+          <dt>보관 위치</dt><dd>Google 스프레드시트 (국외 서버)</dd>
+        </dl>
+        <p class="src" style="margin-top:8px">동의하지 않으실 수 있으며, 이 경우 사전 예약은 어렵습니다. <a href="privacy.html" target="_blank" rel="noopener">개인정보처리방침 전문 보기</a></p>
+        <p class="err" id="eConsent">개인정보 수집·이용에 동의해 주세요.</p>
+        <label class="consent-check consent-2">
+          <input type="checkbox" id="fNotice" name="notice" aria-describedby="eNotice">
+          <span>정식 오픈 안내를 문자나 이메일로 받는 데 동의합니다 <span class="req">필수</span></span>
+        </label>
+        <p class="src">사전 예약은 오픈 안내를 받기 위한 신청이라 꼭 필요한 동의입니다. 안내 메시지마다 수신 거부 방법을 적고, <a href="delete.html" target="_blank" rel="noopener">언제든 수신 거부</a>할 수 있습니다. 만 14세 이상만 신청할 수 있습니다.</p>
+        <p class="err" id="eNotice">정식 오픈 안내 수신에 동의해 주세요.</p>
+      </div>
+      <p class="form-error" id="formError" role="alert">전송하지 못했습니다. 입력하신 내용은 그대로 있으니 잠시 후 다시 시도해 주세요.</p>
+      <button class="btn btn-primary btn-full" type="submit" id="submitBtn">사전 예약 신청하기</button>
+      <p class="pay-note">결제 정보를 받지 않으며, 결제되지 않습니다.</p>
+    </form>
+    <div class="done" id="doneView" hidden tabindex="-1">
+      <h3>사전 예약이 접수되었습니다</h3>
+      <p>결제된 금액은 없습니다.<br>정식 오픈 소식과 확정 가격을 먼저 알려 드리겠습니다.</p>
+      <div class="test-note" id="testNote" hidden><strong>테스트 모드:</strong> 저장 주소가 설정되지 않아 이 신청은 저장되지 않았습니다. 코드의 CONFIG.formEndpoint를 설정한 뒤 공개하세요.</div>
+      <button class="btn btn-ghost" type="button" id="doneClose">닫기</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ================================================================
+   수정 지점: 가격·패키지·부가 서비스는 여기서만 바꾸면 됩니다.
+   모든 금액은 설문 전 가안입니다.
+   ================================================================ */
+const CONFIG = {
+  // 구글 Apps Script 웹 앱 주소(https://script.google.com/macros/s/.../exec)를 넣으세요.
+  // 비어 있으면 저장되지 않는 테스트 모드로 동작하고 완료 화면에 표시됩니다.
+  formEndpoint: 'https://script.google.com/macros/s/AKfycbyuTwvr-8_o9bCmygEFbW2Av4n4dnyhoak1RqY8njzo-S0BxegI7JAmGhZuCz2-hgkgkA/exec',
+  signup: { url: 'https://pxfwsjipjxvafefmgdbk.supabase.co', key: 'sb_publishable_XUi0Id-De-VL6b2L6XDIsw_Xk9mg0Lk' }, // 관리자 서버(Supabase). 이 키는 신청을 넣는 일만 할 수 있다.
+  defaultPackage: 'book',
+  packages: [
+    { id: 'record', books: 0, name: '기록', sub: '책 없이 녹음과 글로만 남기기', price: 290000,
+      features: ['부모님께 매주 질문 보내기', '말씀을 글로 정리', '녹음 보관과 내려받기', '가족과 함께 듣고 읽기'] },
+    { id: 'book', books: 1, name: '모아온', sub: '목소리가 들리는 실물 책 1권', price: 790000, tag: '추천',
+      features: ['기록에 들어간 것 모두', '실물 책 1권', '이야기마다 목소리 QR'] },
+    { id: 'heritage', books: 2, name: '두 분 모아온', sub: '아버지와 어머니 각각 한 권씩', price: 1390000,
+      features: ['두 분의 이야기를 따로 기록', '실물 책 2권', '가족과 함께 듣고 읽기', '먼저 제작'] },
+  ],
+  addons: [
+    { id: 'interview', name: '인터뷰어 연결', desc: '혼자 답하시기 어려운 부모님께 인터뷰어가 대화를 이끌어 드립니다', price: 300000 },
+    { id: 'copies', name: '추가 인쇄본', desc: '형제자매 집마다 한 권씩 둘 수 있게 더 인쇄합니다', price: 90000, unit: '권당', qty: true, maxQty: 20 },
+    { id: 'gift', name: '선물 패키지', desc: '생신·환갑·칠순·어버이날용 포장, 메시지 카드, 증정 페이지', price: 50000 },
+    { id: 'hardcover', name: '하드커버와 화보 페이지', desc: '표지를 하드커버로 바꾸고 사진 화보 페이지를 늘립니다', price: 150000 },
+  ],
+};
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const won = n => (n % 10000 === 0 ? `${(n / 10000).toLocaleString('ko-KR')}만원` : `${n.toLocaleString('ko-KR')}원`);
+
+/* 같은 브라우저의 재방문을 구분하는 무작위 ID. 개인을 식별하는 정보는 담지 않습니다. */
+/* 방문자 ID: 쿠키 배너에서 "허용"한 경우에만 브라우저에 저장합니다.
+   허용하지 않으면 새로고침할 때마다 바뀌는 임시 ID를 씁니다. 어느 쪽이든 이름·연락처는 담기지 않습니다. */
+const CONSENT_KEY = 'moaon_consent';
+const makeId = () => (crypto.randomUUID ? crypto.randomUUID() : `v${Date.now()}${Math.random().toString(36).slice(2)}`);
+function readConsent() { try { return localStorage.getItem(CONSENT_KEY); } catch { return null; } }
+let VISITOR = makeId();
+try {
+  if (readConsent() === 'granted') {
+    VISITOR = localStorage.getItem('moaon_visitor') || VISITOR;
+    localStorage.setItem('moaon_visitor', VISITOR);
+  } else {
+    localStorage.removeItem('moaon_visitor');
+  }
+} catch {}
+function setConsent(choice) {
+  try {
+    localStorage.setItem(CONSENT_KEY, choice);
+    if (choice === 'granted') localStorage.setItem('moaon_visitor', VISITOR);
+    else localStorage.removeItem('moaon_visitor');
+  } catch {}
+  document.getElementById('cookieBanner').hidden = true;
+}
+
+/* 이벤트 로깅. 이름·연락처 같은 개인정보는 넣지 않습니다. */
+function track(name, props = {}) {
+  console.log('[event]', name, props);
+  if (!CONFIG.formEndpoint) return;
+  const body = JSON.stringify({
+    type: 'event', event: name, visitor: VISITOR,
+    detail: props.location || props.addon || props.type || props.reason || props.source || '',
+    package: props.package || '', qty: props.qty ?? '', total: props.total ?? props.price ?? '',
+  });
+  const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+  if (!navigator.sendBeacon || !navigator.sendBeacon(CONFIG.formEndpoint, blob)) {
+    fetch(CONFIG.formEndpoint, { method: 'POST', mode: 'no-cors', keepalive: true, body }).catch(() => {});
+  }
+}
+
+const state = { pkg: CONFIG.defaultPackage, addons: Object.fromEntries(CONFIG.addons.map(a => [a.id, 0])) };
+const pkgOf = id => CONFIG.packages.find(p => p.id === id);
+const addonTotal = () => CONFIG.addons.reduce((s, a) => s + a.price * state.addons[a.id], 0);
+const grandTotal = () => pkgOf(state.pkg).price + addonTotal();
+
+/* 가격 영역 그리기 */
+$('#plans').innerHTML = CONFIG.packages.map(p => `
+  <label class="plan">
+    <input type="radio" name="plan" value="${p.id}" aria-label="${p.name} ${won(p.price)}">
+    ${p.tag ? `<span class="plan-tag">${p.tag}</span>` : ''}
+    <span class="plan-name">${p.name}</span>
+    <span class="plan-sub">${p.sub}</span>
+    <span class="plan-price">${won(p.price)}</span>
+    <span class="plan-books" aria-hidden="true">${p.books ? '<i></i>'.repeat(p.books) + `<em>실물 책 ${p.books}권</em>` : '<em>실물 책 없음</em>'}</span>
+    <ul>${p.features.map(f => `<li>${f}</li>`).join('')}</ul>
+  </label>`).join('');
+
+const addonHTML = (a, scope) => `
+  <div class="addon" data-addon="${a.id}">
+    <input type="checkbox" id="${scope}-${a.id}" data-check="${a.id}">
+    <label for="${scope}-${a.id}">${a.name}<span class="price">${a.unit ? a.unit + ' ' : ''}+${won(a.price)}</span></label>
+    <p>${a.desc}</p>
+    ${a.qty ? `<div class="qty">
+      <span id="${scope}-${a.id}-l">수량</span>
+      <button type="button" data-step="-1" data-for="${a.id}" aria-label="${a.name} 수량 줄이기">−</button>
+      <output data-qty="${a.id}" aria-labelledby="${scope}-${a.id}-l"></output>
+      <button type="button" data-step="1" data-for="${a.id}" aria-label="${a.name} 수량 늘리기">+</button>
+    </div>` : ''}
+  </div>`;
+$('#pricingAddons').innerHTML = CONFIG.addons.map(a => addonHTML(a, 'p')).join('');
+$('#formAddons').innerHTML = CONFIG.addons.map(a => addonHTML(a, 'f')).join('');
+$('#fPackage').innerHTML = CONFIG.packages.map(p => `<option value="${p.id}">${p.name} (${won(p.price)})</option>`).join('');
+
+/* 가격이 바뀌어도 문구가 맞도록 설정값에서 계산 */
+const main = CONFIG.packages.find(p => p.tag) || CONFIG.packages[0];
+$('#anchorBook').textContent = `${main.name}(${won(main.price)})에는 책과 함께 부모님의 목소리까지 담깁니다.`;
+$$('[data-from-price]').forEach(el => { el.textContent = won(Math.min(...CONFIG.packages.map(p => p.price))); });
+
+function sync() {
+  const stage = document.querySelector('.buy-stage');
+  if (stage) stage.dataset.books = String(pkgOf(state.pkg).books);
+  $$('input[name=plan]').forEach(r => { r.checked = r.value === state.pkg; });
+  $('#fPackage').value = state.pkg;
+  CONFIG.addons.forEach(a => {
+    const q = state.addons[a.id];
+    $$(`[data-check="${a.id}"]`).forEach(c => { c.checked = q > 0; });
+    $$(`[data-addon="${a.id}"]`).forEach(el => el.classList.toggle('is-on', q > 0));
+    $$(`[data-qty="${a.id}"]`).forEach(o => { o.textContent = `${q}권`; });
+  });
+  const p = pkgOf(state.pkg), add = addonTotal();
+  $$('[data-total]').forEach(el => { el.textContent = won(grandTotal()); });
+  $$('[data-breakdown]').forEach(el => { el.textContent = `${p.name} ${won(p.price)}${add ? ` + 부가 서비스 ${won(add)}` : ''}`; });
+}
+function setPackage(id) {
+  if (state.pkg === id) return;
+  state.pkg = id; sync();
+  track('package_select', { package: id, price: pkgOf(id).price });
+}
+function setAddon(id, qty) {
+  const a = CONFIG.addons.find(x => x.id === id);
+  state.addons[id] = Math.max(0, Math.min(a.maxQty || 1, qty));
+  sync();
+  track('addon_toggle', { addon: id, qty: state.addons[id], total: grandTotal() });
+}
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.name === 'plan') setPackage(t.value);
+  if (t.id === 'fPackage') setPackage(t.value);
+  if (t.dataset.check) setAddon(t.dataset.check, t.checked ? 1 : 0);
+});
+document.addEventListener('click', e => {
+  const step = e.target.closest('[data-step]');
+  if (step) {
+    const id = step.dataset.for, next = state.addons[id] + Number(step.dataset.step);
+    setAddon(id, next);
+    return;
+  }
+  const cta = e.target.closest('[data-cta]');
+  if (cta) track('cta_click', { location: cta.dataset.cta });
+  const sample = e.target.closest('[data-sample]');
+  if (sample) track('sample_view', { type: 'scroll', location: sample.dataset.sample });
+  const open = e.target.closest('[data-open-form]');
+  if (open) openForm(open.dataset.openForm);
+});
+
+/* 사전 예약 폼 */
+const dialog = $('#reserveDialog'), form = $('#reserveForm'), done = $('#doneView');
+function openForm(location) {
+  track('cta_click', { location });
+  track('form_open', { location, package: state.pkg, total: grandTotal() });
+  if (!done.hidden) { done.hidden = true; form.hidden = false; }
+  dialog.showModal();
+}
+$('#closeDialog').addEventListener('click', () => dialog.close());
+$('#doneClose').addEventListener('click', () => dialog.close());
+dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+
+let formStarted = false;
+form.addEventListener('input', () => {
+  if (formStarted) return;
+  formStarted = true;
+  track('form_start', { package: state.pkg });
+});
+
+const isContact = v => /^01[016789]-?\d{3,4}-?\d{4}$/.test(v.replace(/\s/g, '')) || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+const rules = [
+  { input: '#fName', err: '#eName', ok: () => $('#fName').value.trim() !== '' },
+  { input: '#fContact', err: '#eContact', ok: () => isContact($('#fContact').value.trim()) },
+  { input: '#fAge', err: '#eAge', ok: () => !!$('input[name=parentAge]:checked'), focus: 'input[name=parentAge]' },
+  { input: '#fReason', err: '#eReason', ok: () => !!$('input[name=reason]:checked'), focus: 'input[name=reason]' },
+  { input: '#fConsent', err: '#eConsent', ok: () => $('#fConsent').checked },
+  { input: '#fNotice', err: '#eNotice', ok: () => $('#fNotice').checked },
+];
+function validate() {
+  let first = null;
+  rules.forEach(r => {
+    const ok = r.ok();
+    $(r.err).classList.toggle('show', !ok);
+    $(r.input).setAttribute('aria-invalid', String(!ok));
+    if (!ok && !first) first = r;
+  });
+  if (first) $(first.focus || first.input).focus();
+  return !first;
+}
+form.addEventListener('change', () => {
+  rules.forEach(r => { if (r.ok()) { $(r.err).classList.remove('show'); $(r.input).setAttribute('aria-invalid', 'false'); } });
+});
+
+/* 신청 저장. 구글 시트(집계용)와 관리자 서버(고객 목록용) 두 곳에 보냅니다. 한 곳만 성공해도 신청은 접수된 것입니다. */
+async function saveToSheet(payload) {
+  const res = await fetch(CONFIG.formEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ type: 'reservation', ...payload }),
+  });
+  if (!res.ok) throw new Error(`sheet failed: ${res.status}`);
+  const result = await res.json();
+  if (!result.ok) throw new Error('sheet rejected');
+}
+async function saveToAdmin(payload) {
+  const res = await fetch(`${CONFIG.signup.url}/rest/v1/signups`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: CONFIG.signup.key, Prefer: 'return=minimal' },
+    body: JSON.stringify({
+      name: payload.name, contact: payload.contact, parent_age: payload.parentAge, reason: payload.reason,
+      package_name: payload.packageName, addons: payload.addons, total: payload.total, consent: true,
+    }),
+  });
+  if (!res.ok) throw new Error(`admin failed: ${res.status}`);
+}
+async function saveReservation(payload) {
+  if (!CONFIG.formEndpoint) return { saved: false };
+  const results = await Promise.allSettled([saveToSheet(payload), saveToAdmin(payload)]);
+  results.forEach(r => { if (r.status === 'rejected') console.error(r.reason); });
+  if (results.every(r => r.status === 'rejected')) throw new Error('save failed');
+  return { saved: true };
+}
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  $('#formError').classList.remove('show');
+  if (!validate()) return;
+  const btn = $('#submitBtn');
+  btn.disabled = true; btn.textContent = '보내는 중…';
+  const selected = Object.fromEntries(Object.entries(state.addons).filter(([, q]) => q > 0));
+  const reason = $('input[name=reason]:checked').value;
+  try {
+    const { saved } = await saveReservation({
+      name: $('#fName').value.trim(), contact: $('#fContact').value.trim(),
+      parentAge: $('input[name=parentAge]:checked').value, reason,
+      packageName: pkgOf(state.pkg).name,
+      addons: CONFIG.addons.filter(a => selected[a.id]).map(a => (a.qty ? `${a.name} ${selected[a.id]}권` : a.name)).join(', '),
+      total: grandTotal(),
+    });
+    track('form_submit', { package: state.pkg, total: grandTotal(), reason });
+    form.reset(); formStarted = false; sync();
+    form.hidden = true; done.hidden = false;
+    $('#testNote').hidden = saved;
+    done.focus();
+  } catch (err) {
+    console.error(err);
+    $('#formError').classList.add('show');
+  } finally {
+    btn.disabled = false; btn.textContent = '사전 예약 신청하기';
+  }
+});
+
+/* 파형과 QR 모양 그림 (실제로 스캔되지 않는 장식) */
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+$$('[data-wave]').forEach(w => {
+  w.innerHTML = Array.from({ length: Number(w.dataset.wave) }, () => `<i style="height:${Math.round(18 + rnd() * 82)}%"></i>`).join('');
+});
+$$('[data-qr]').forEach(svg => {
+  const inFinder = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+  let cells = '';
+  for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) {
+    if (!inFinder(x, y) && rnd() > .52) cells += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  }
+  const finder = (x, y) => `<path fill-rule="evenodd" d="M${x} ${y}h7v7h-7zM${x + 1} ${y + 1}v5h5v-5z"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3"/>`;
+  svg.innerHTML = `<g fill="#283139">${cells}${finder(0, 0)}${finder(18, 0)}${finder(0, 18)}</g>`;
+});
+
+/* 1년 달력: 한 달에 하루씩만 초록색 */
+(() => {
+  const year = document.getElementById('year');
+  if (!year) return;
+  let html = '';
+  for (let m = 1; m <= 12; m++) {
+    const day = Math.floor(rnd() * 30);
+    let dots = '';
+    for (let d = 0; d < 30; d++) dots += d === day ? '<i class="met"></i>' : '<i></i>';
+    html += `<div class="mo"><span>${m}월</span><div class="dots">${dots}</div></div>`;
+  }
+  year.innerHTML = html;
+})();
+
+/* 비용 막대: 가격 설정에서 계산 */
+(() => {
+  const bar = document.getElementById('barOurs');
+  if (!bar) return;
+  const prices = CONFIG.packages.map(p => p.price), lo = Math.min(...prices), hi = Math.max(...prices), max = 3000000;
+  bar.style.left = (lo / max * 100) + '%';
+  bar.style.width = ((hi - lo) / max * 100) + '%';
+  document.getElementById('barOursLabel').textContent = `${won(lo)}~${won(hi)} (예상)`;
+})();
+
+/* QR 재생 데모: 소리 없이 재생 방식만 보여줌 */
+(() => {
+  const btn = $('#playBtn'), bars = $$('#demoWave i'), lines = $$('#quote span');
+  const DURATION = 9000;
+  const PLAY = 'M6 4l15 8-15 8z', PAUSE = 'M6 4h4v16H6zM14 4h4v16h-4z';
+  let raf = null, started = 0, elapsed = 0;
+  const paint = () => {
+    const r = elapsed / DURATION;
+    bars.forEach((b, i) => b.classList.toggle('on', i / bars.length < r));
+    const idx = Math.min(lines.length - 1, Math.floor(r * lines.length));
+    lines.forEach((l, i) => l.classList.toggle('now', elapsed > 0 && i === idx));
+  };
+  const ui = playing => {
+    btn.setAttribute('aria-pressed', String(playing));
+    $('#playText').textContent = playing ? '일시정지' : '재생 화면 보기';
+    $('#playIcon path').setAttribute('d', playing ? PAUSE : PLAY);
+  };
+  const stop = () => { cancelAnimationFrame(raf); raf = null; ui(false); };
+  const tick = t => {
+    elapsed = t - started;
+    if (elapsed >= DURATION) { elapsed = 0; paint(); stop(); return; }
+    paint(); raf = requestAnimationFrame(tick);
+  };
+  btn.addEventListener('click', () => {
+    if (raf) { stop(); return; }
+    track('sample_view', { type: 'qr_demo' });
+    started = performance.now() - elapsed;
+    ui(true); raf = requestAnimationFrame(tick);
+  });
+})();
+
+/* 스크롤 페이드인 */
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); }
+  }), { threshold: .08 });
+  $$('.reveal').forEach(el => io.observe(el));
+} else {
+  $$('.reveal').forEach(el => el.classList.add('seen'));
+}
+
+sync();
+/* 유입 경로: ?utm_source=... 가 있으면 그 값, 없으면 이전 페이지의 도메인, 둘 다 없으면 '직접' */
+function trafficSource() {
+  try {
+    const utm = new URLSearchParams(location.search).get('utm_source');
+    if (utm) return utm.slice(0, 40);
+    if (document.referrer) return new URL(document.referrer).hostname.replace(/^www\./, '');
+  } catch {}
+  return '직접';
+}
+track('page_view', { source: trafficSource() });
+
+const banner = document.getElementById('cookieBanner');
+if (!readConsent()) banner.hidden = false;
+banner.addEventListener('click', e => { const b = e.target.closest('[data-consent]'); if (b) setConsent(b.dataset.consent); });
+document.querySelector('[data-cookie-settings]').addEventListener('click', e => { e.preventDefault(); banner.hidden = false; banner.querySelector('[data-consent="granted"]').focus(); });
+</script>
+<noscript><p style="padding:16px;text-align:center">가격 선택과 사전 예약에는 JavaScript가 필요합니다.</p></noscript>
+</body>
+</html>
