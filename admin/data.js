@@ -6,7 +6,7 @@ const SUPABASE_URL = 'https://pxfwsjipjxvafefmgdbk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_XUi0Id-De-VL6b2L6XDIsw_Xk9mg0Lk'; // 공개해도 되는 키입니다 (권한은 DB 규칙이 막음)
 
 const API = (() => {
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  const sb = window.MOAON_DEMO ? null : supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, storageKey: 'moaon-admin-auth' },
   });
   const META = {
@@ -403,7 +403,17 @@ const API = (() => {
   });
 
   return {
+    async agent(body) {
+      if (window.MOAON_DEMO) return window.MOAON_DEMO.agent(body);
+      const s = await session();
+      if (!s) throw fail('로그인이 필요합니다.', 401);
+      const r = await fetch(SUPABASE_URL + '/functions/v1/book-agent', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: 'Bearer ' + s.access_token }, body: JSON.stringify(body) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw fail(d.error || '제작실에 연결하지 못했습니다.', r.status);
+      return d;
+    },
     async call(method, path, body) {
+      if (window.MOAON_DEMO) return window.MOAON_DEMO.call(method, path, body);
       for (const [m, rx, h] of handlers) {
         if (m !== method) continue;
         const mm = rx.exec(path);
@@ -415,6 +425,7 @@ const API = (() => {
       throw fail('찾을 수 없습니다.', 404);
     },
     async uploadAudio(tid, file) {
+      if (window.MOAON_DEMO) throw fail('실제 음성 업로드는 로그인 후 사용할 수 있습니다.');
       const ext = (file.name.split('.').pop() || '').toLowerCase();
       if (!AUDIO_TYPES[ext]) throw fail('지원하지 않는 음성 형식입니다. (m4a, mp3, wav, aac, amr, ogg, webm, mp4)');
       if (file.size > MAX_AUDIO) throw fail('파일이 너무 큽니다. 50MB까지 올릴 수 있습니다.');

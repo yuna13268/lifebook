@@ -45,7 +45,7 @@ function renderAuth(setup) {
       <label for="p">비밀번호${setup ? ' (6자 이상)' : ''}</label><input id="p" name="password" type="password" required autocomplete="${setup ? 'new-password' : 'current-password'}">
       <p><button class="btn" type="submit">${setup ? '계정 만들기' : '로그인'}</button></p>
     </form>
-    <p class="muted">계정은 관리자가 만들어 줍니다. 허가된 팀원만 쓸 수 있습니다.</p></div>`;
+    <p class="muted">계정은 관리자가 만들어 줍니다. 허가된 팀원만 쓸 수 있습니다.</p><p><a href="?demo=1#/studio/1">가상 고객으로 제작실 둘러보기</a></p></div>`;
 }
 
 function renderPending() {
@@ -68,19 +68,25 @@ new MutationObserver(() => {
 
 /* ---------- 라우팅 ---------- */
 window.addEventListener('hashchange', () => { if (ME) route(); });
+let routeSeq = 0;
 function route() {
+  const seq = ++routeSeq;
+  const paint = (html, active) => { if (seq === routeSeq) view(html, active); };
   const h = (location.hash || '#/').slice(1).split('/').filter(Boolean);
   const [a, b, c] = h;
   const go = guard(async () => {
-    if (!a) return view(await pageDashboard(), 'dashboard');
-    if (a === 'customers') return view(await pageCustomers(), 'customers');
-    if (a === 'customer') return view(await pageCustomer(+b, c || 'info'), 'customers');
-    if (a === 'questions') return view(await pageQuestions(), 'questions');
-    if (a === 'queue') return view(await pageQueue(), 'queue');
-    if (a === 'destruction') return view(await pageDestruction(), 'destruction');
-    if (a === 'team') return view(await pageTeam(), 'team');
-    if (a === 'activity') return view(await pageActivity(), 'activity');
-    view('<p class="empty">없는 화면입니다.</p>', '');
+    if (!a) return paint(await pageDashboard(), 'dashboard');
+    if (a === 'customers') return paint(await pageCustomers(), 'customers');
+    if (a === 'customer') return paint(await pageCustomer(+b, c || 'info'), 'customers');
+    if (a === 'questions') return paint(await pageQuestions(), 'questions');
+    if (a === 'queue') return paint(await pageQueue(), 'queue');
+    if (a === 'studio') return paint(await Studio.page(b), 'studio');
+    if (a === 'skills') return paint(await Studio.skills(), 'skills');
+    if (a === 'security') return paint(await Studio.security(), 'security');
+    if (a === 'destruction') return paint(await pageDestruction(), 'destruction');
+    if (a === 'team') return paint(await pageTeam(), 'team');
+    if (a === 'activity') return paint(await pageActivity(), 'activity');
+    paint('<p class="empty">없는 화면입니다.</p>', '');
   });
   go();
 }
@@ -90,12 +96,14 @@ function view(html, active) {
   const link = (k, label, href) => `<a href="${href}" class="${active === k ? 'on' : ''}"${active === k ? ' aria-current="page"' : ''}>${label}</a>`;
   root.innerHTML = `<a class="skip" href="#main" data-act="skip">본문으로 건너뛰기</a>
     <div class="shell"><nav class="side" aria-label="메뉴"><div class="brand">모아온<small>관리자</small></div>
-    <div class="grp">일</div>${link('dashboard', '대시보드', '#/')}${link('customers', '고객', '#/customers')}${link('queue', '발송 대기열', '#/queue')}${link('questions', '질문 은행', '#/questions')}
+    <div class="grp">일</div>${link('dashboard', '대시보드', '#/')}${link('studio', '책 제작실', '#/studio')}${link('customers', '고객', '#/customers')}${link('queue', '발송 대기열', '#/queue')}${link('questions', '질문 은행', '#/questions')}${link('skills', '제작 스킬', '#/skills')}${link('security', '개인정보 보호', '#/security')}
     ${admin ? '<div class="grp">관리</div>' + link('destruction', '파기 대기', '#/destruction') + link('team', '팀원', '#/team') + link('activity', '활동 기록', '#/activity') : ''}
     <div class="who"><b>${esc(ME.name)}</b><span>${admin ? '관리자' : '담당자'}</span><a href="#" data-act="logout">로그아웃</a></div></nav>
     <main id="main" tabindex="-1">${html}</main></div>`;
+  window.scrollTo(0, 0);
   labelTables();
   hydrateAudio();
+  if (active === 'studio') Studio.mount();
 }
 
 function hydrateAudio() {
@@ -131,8 +139,8 @@ async function pageDashboard() {
   const soon = d.soon.length
     ? `<table><tr><th>고객</th><th>파기 예정일</th></tr>${d.soon.map(s => `<tr class="click" data-href="#/customer/${s.id}/manage"><td><b>${esc(s.code)}</b></td><td>${esc(s.delete_after)} ${s.delete_after < META.today ? pill('기한 지남', 'warn') : pill('30일 이내', 'warn')}</td></tr>`).join('')}</table>`
     : '<p class="empty">30일 안에 파기할 고객이 없습니다.</p>';
-  return `<header class="page-head"><h1>대시보드</h1><p class="sub">${admin ? '전체 고객' : '내가 맡은 고객'} ${d.total}명</p></header>
-    <h2>지금 할 일</h2>
+  return `<header class="page-head"><p class="eyebrow">MOAON WORKSPACE</p><h1>이야기가 책이 되는 곳</h1><p class="sub">${admin ? '전체 고객' : '내가 맡은 고객'} ${d.total}명</p></header>
+    <section class="studio-banner"><div><span class="eyebrow">책 제작 에이전트</span><h2>한 편의 기억에서,<br>한 권의 책으로.</h2><p>질문을 고르고, 이야기를 다듬고, 부모님의 확인을 받아 책을 완성하세요.</p><a class="btn" href="#/studio">책 제작실 열기</a></div><div class="book-symbol" aria-hidden="true"><span>모아온</span><b>내가 기억하기 전의<br>이야기</b><small>우리 가족의 첫 번째 책</small></div></section><h2>지금 할 일</h2>
     <div class="todos">${todo(d.draftPlans, '승인을 기다리는 질문', '#/queue', admin ? '발송 대기열에서 승인' : '관리자 승인 대기')}${todo(d.readyToSend, '보낼 수 있는 질문', '#/queue', '문안을 복사해 보내기')}${todo(d.newTranscripts, '정리할 새 녹취', '#/customers', '고객을 열어 정리본 쓰기')}${admin ? todo(d.unassigned, '담당자 없는 고객', '#/customers', '담당자 정하기') : ''}</div>
     <h2>진행 현황</h2>
     <div class="card">${total ? `<div class="funnel" role="img" aria-label="진행 상태별 고객 수">${bar}</div>` : '<p class="empty">고객이 없습니다.</p>'}<ul class="legend">${legend}</ul></div>
@@ -183,7 +191,7 @@ async function pageCustomer(id, tab) {
   else if (tab === 'story') body = tabStories(c);
   else body = tabManage(c);
   const warn = c.delete_after && c.delete_after < META.today ? `<div class="warnbox">보관 기한(${esc(c.delete_after)})이 지났습니다. '내려받기·파기' 탭에서 파기해 주세요.</div>` : '';
-  return `<p class="crumb"><a href="#/customers">← 고객 목록</a></p>
+  return `<p class="crumb"><a href="#/customers">고객 목록</a> / <a href="#/studio/${id}">이 고객의 책 제작실</a></p>
     <header class="page-head"><h1>${esc(c.code)}${c.parent_name ? ' · ' + esc(c.parent_name) : ''} ${statusPill(c.status)}</h1>
     <p class="sub">보호자 ${esc(c.guardian_name) || '-'} · ${esc(c.guardian_contact) || '-'}${c.owner_id ? '' : ' · <b class="warn-text">담당자 미배정</b>'}</p></header>${warn}<nav class="tabs" aria-label="고객 정보 탭">${tabs}</nav>${body}`;
 }
