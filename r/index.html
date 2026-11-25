@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<!-- blob: 은 AI 대화 라이브러리가 소리 처리기(AudioWorklet)를 만들 때, wss://api.elevenlabs.io 는 AI 대화 연결에 씁니다. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' blob:; style-src 'self'; connect-src https://pxfwsjipjxvafefmgdbk.supabase.co https://api.elevenlabs.io wss://api.elevenlabs.io; media-src 'self' blob:; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#183F34">
+<meta name="format-detection" content="telephone=no">
+<title>모아온 · 이야기 녹음</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="record.css">
+</head>
+<body>
+<a class="skip" href="#app">본문으로 바로 가기</a>
+<header class="top"><b>모아온</b><span>이야기 녹음</span></header>
+<main id="app" tabindex="-1"><p class="loading">질문을 불러오고 있어요…</p></main>
+<p id="sr" class="sr" aria-live="polite"></p>
+<div id="toast" role="status" aria-live="polite"></div>
+<noscript><p class="card center">이 화면은 자바스크립트가 켜져 있어야 녹음할 수 있어요.</p></noscript>
+<script src="record.js"></script>
+</body>
+</html>

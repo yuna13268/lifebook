@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모아온 | 부모님 목소리가 들리는 책</title>
+<meta name="description" content="부모님은 매주 오는 질문에 말로만 답하세요. 한 권의 책이 되고, 페이지마다 그 목소리가 QR로 남습니다.">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:type" content="website">
+<meta property="og:title" content="모아온 | 부모님 목소리가 들리는 책">
+<meta property="og:description" content="부모님은 말로만 답하세요. 한 권의 책이 되고, 페이지마다 그 목소리가 QR로 남습니다.">
+<style>
+/* 시장 검증용 한 화면 페이지. 버튼은 "사전 예약하기"와 "자세히 보기" 두 개뿐 */
+:root {
+  color-scheme: light;
+  --bg: #F5F5F7; --card: #FFFFFF; --ink: #1D1D1F; --muted: #6E6E73; --line: #D2D2D7;
+  --action: #2E5A4C; --action-hover: #24483C; --sage: #9FB283; --sage-soft: #EEF2E8; --charcoal: #283139;
+  --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", "맑은 고딕", sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--card); color: var(--ink); font: 400 17px/1.6 var(--sans); letter-spacing: -0.01em; word-break: keep-all; -webkit-font-smoothing: antialiased; }
+h1, h2, p, ul, ol { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: min(100%, 560px); margin-inline: auto; padding-inline: 20px; }
+
+header { padding-block: 18px; }
+.logo { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; }
+
+.stage { position: relative; display: flex; justify-content: center; align-items: center; height: 300px; background: var(--bg); border-radius: 22px; overflow: hidden; }
+.book { position: relative; width: 160px; aspect-ratio: 3 / 4.1; padding: 18px 14px 14px 24px; display: flex; flex-direction: column; color: #F3F6EF; background: var(--action); border-radius: 3px 8px 8px 3px; box-shadow: 0 24px 40px -18px rgba(40,49,57,.5), 8px 8px 0 -2px #fff; transform: rotate(-3deg); }
+.book::before { content: ""; position: absolute; inset: 0 auto 0 10px; width: 2px; background: rgba(255,255,255,.18); }
+.book small { font-size: .62rem; opacity: .8; }
+.book b { margin-top: 8px; font-size: 1.3rem; line-height: 1.25; letter-spacing: -0.03em; }
+.book i { width: 22px; height: 3px; margin-top: 10px; background: var(--sage); border-radius: 2px; }
+.voice { position: absolute; right: 18px; bottom: 22px; display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,.94); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.1); font-size: .78rem; }
+.voice svg { width: 40px; height: 40px; }
+.voice span { display: block; color: var(--muted); font-size: .72rem; }
+
+.hero { text-align: center; padding-top: 28px; }
+h1 { font-size: clamp(1.9rem, 7.4vw, 2.5rem); line-height: 1.2; font-weight: 700; letter-spacing: -0.035em; }
+.sub { margin-top: 12px; color: var(--muted); font-size: 1.02rem; }
+.price { margin-top: 22px; font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; }
+.price-note { margin-top: 2px; color: var(--muted); font-size: .9rem; }
+.actions { display: grid; gap: 10px; margin-top: 24px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 24px; border: 0; border-radius: 980px; font: 600 1.05rem/1 var(--sans); cursor: pointer; text-decoration: none; }
+.btn-primary { background: var(--action); color: #fff; }
+.btn-primary:hover { background: var(--action-hover); }
+.btn-ghost { background: var(--bg); color: var(--ink); }
+.btn-ghost:hover { background: #E8E8ED; }
+.pay-note { margin-top: 12px; text-align: center; color: var(--muted); font-size: .82rem; }
+
+.detail { margin-top: 36px; padding: 24px 22px; background: var(--bg); border-radius: 22px; }
+.detail[hidden] { display: none; }
+.detail h2 { font-size: 1.2rem; letter-spacing: -0.02em; }
+.steps { margin-top: 16px; display: grid; gap: 14px; counter-reset: s; }
+.steps li { position: relative; padding-left: 42px; counter-increment: s; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--action); color: #fff; display: grid; place-items: center; font-size: .85rem; font-weight: 700; }
+.steps b { display: block; font-size: 1rem; }
+.steps span { color: var(--muted); font-size: .92rem; }
+.includes { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); display: grid; gap: 8px; font-size: .95rem; }
+.includes li { position: relative; padding-left: 26px; }
+.includes li::before { content: "✓"; position: absolute; left: 0; color: var(--action); font-weight: 700; }
+.detail .btn { width: 100%; margin-top: 22px; }
+
+footer { margin-top: 48px; padding-block: 20px 36px; border-top: 1px solid #E8E8ED; color: var(--muted); font-size: .78rem; line-height: 1.7; }
+footer a { color: var(--ink); }
+
+/* 사전 예약을 누른 뒤 */
+dialog { width: min(100% - 24px, 460px); margin: auto auto 12px; padding: 0; border: 0; border-radius: 22px; background: var(--card); color: var(--ink); }
+dialog::backdrop { background: rgba(0,0,0,.45); }
+.sheet { padding: 26px 22px 22px; }
+.sheet h2 { font-size: 1.3rem; letter-spacing: -0.02em; line-height: 1.35; }
+.sheet p { margin-top: 10px; color: var(--muted); font-size: .95rem; }
+.sheet label.field { display: block; margin-top: 18px; font-weight: 600; font-size: .95rem; }
+.sheet input[type=text] { width: 100%; margin-top: 6px; min-height: 50px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; font: 400 17px var(--sans); }
+.check { display: grid; grid-template-columns: 22px 1fr; gap: 8px; margin-top: 12px; font-size: .86rem; line-height: 1.5; cursor: pointer; }
+.check input { width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--action); }
+.check a { color: var(--action); }
+.err { display: none; margin-top: 8px; color: #D70015; font-size: .86rem; }
+.err.show { display: block; }
+.sheet .btn { width: 100%; margin-top: 18px; }
+.sheet .btn[disabled] { opacity: .6; }
+.later { display: block; width: 100%; margin-top: 8px; padding: 12px; border: 0; background: none; color: var(--muted); font: 500 .95rem var(--sans); cursor: pointer; }
+.thanks[hidden], .ask[hidden] { display: none; }
+.test-note { margin-top: 14px; padding: 10px 12px; background: #FFF4CF; border-radius: 10px; font-size: .85rem; color: #4A3700; }
+
+@media (min-width: 720px) {
+  .stage { height: 340px; }
+  .actions { grid-template-columns: 1fr 1fr; }
+  dialog { margin: auto; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="wrap"><span class="logo">모아온</span></header>
+
+<main class="wrap">
+  <div class="stage" role="img" aria-label="'어머니의 이야기'라는 제목의 책과, QR을 찍으면 목소리가 재생되는 카드를 그린 예시 그림">
+    <div class="book" aria-hidden="true"><small>우리 가족의 기록</small><b>어머니의<br>이야기</b><i></i></div>
+    <div class="voice" aria-hidden="true"><svg data-qr viewBox="0 0 25 25"></svg><div>QR을 찍으면<span>그날의 목소리 재생</span></div></div>
+  </div>
+
+  <section class="hero">
+    <h1>부모님 목소리가<br>들리는 책</h1>
+    <p class="sub">부모님은 매주 오는 질문에 말로만 답하세요. 한 권의 책이 되고, 페이지마다 그 목소리가 QR로 남습니다.</p>
+    <p class="price" id="price">79만원</p>
+    <p class="price-note">실물 책 1권 · 목소리 QR 포함</p>
+    <div class="actions">
+      <button class="btn btn-primary" type="button" data-preorder="hero">사전 예약하기</button>
+      <button class="btn btn-ghost" type="button" id="moreBtn" aria-expanded="false" aria-controls="detail">자세히 보기</button>
+    </div>
+    <p class="pay-note">지금은 결제되지 않습니다.</p>
+  </section>
+
+  <section class="detail" id="detail" hidden>
+    <h2>이렇게 만들어집니다</h2>
+    <ol class="steps">
+      <li><b>매주 질문 하나</b><span>카카오톡이나 문자로 부모님께 질문이 갑니다.</span></li>
+      <li><b>말로 답하기</b><span>링크를 누르고 녹음 버튼만 누르면 됩니다. 글은 쓰지 않아도 됩니다.</span></li>
+      <li><b>한 권의 책으로</b><span>말씀을 글로 다듬어 책으로 엮고, 이야기마다 목소리 QR을 넣습니다.</span></li>
+    </ol>
+    <ul class="includes">
+      <li>앱 설치와 회원가입 없음</li>
+      <li>녹음 원본은 가족이 언제든 내려받기</li>
+      <li>부모님 목소리와 이야기는 AI 학습에 쓰지 않음</li>
+    </ul>
+    <button class="btn btn-primary" type="button" data-preorder="detail">사전 예약하기</button>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>모아온 · 정식 서비스 준비 중 · 운영자 박유나 · <a href="mailto:pyn0802@korea.ac.kr">pyn0802@korea.ac.kr</a></p>
+  <p><a href="../privacy.html">개인정보처리방침</a> · <a href="../delete.html">개인정보 삭제·수신 거부</a></p>
+  <p>방문과 버튼 클릭을 셉니다. 이 기록에는 이름과 연락처가 없고, 브라우저에 아무것도 저장하지 않습니다.</p>
+</footer>
+
+<dialog id="sheet" aria-labelledby="sheetTitle">
+  <div class="sheet">
+    <div class="ask" id="ask">
+      <h2 id="sheetTitle">아직 준비 중이에요</h2>
+      <p>관심 가져 주셔서 감사합니다. 지금은 이 서비스를 정말 만들지 정하기 위해 관심을 확인하는 단계라, 예약이나 결제는 되지 않았습니다. 오픈하면 가장 먼저 알려 드릴까요?</p>
+      <form id="notifyForm" novalidate>
+        <label class="field" for="contact">휴대폰 번호 또는 이메일</label>
+        <input type="text" id="contact" autocomplete="on" aria-describedby="eContact">
+        <p class="err" id="eContact">휴대폰 번호나 이메일을 정확히 입력해 주세요.</p>
+        <label class="check"><input type="checkbox" id="c1"><span>오픈 안내를 위해 연락처를 받는 데 동의합니다. 2026년 12월 31일까지 보관 후 파기합니다. <a href="../privacy.html" target="_blank" rel="noopener">개인정보처리방침</a> (필수)</span></label>
+        <label class="check"><input type="checkbox" id="c2"><span>정식 오픈 안내를 문자나 이메일로 받는 데 동의합니다. 언제든 수신 거부할 수 있습니다. (필수)</span></label>
+        <p class="err" id="eCheck">두 항목에 동의해 주세요. 동의하지 않으시면 알림은 보내 드릴 수 없습니다.</p>
+        <button class="btn btn-primary" type="submit" id="notifyBtn">오픈 알림 받기</button>
+      </form>
+      <button class="later" type="button" id="laterBtn">괜찮아요</button>
+    </div>
+    <div class="thanks" id="thanks" hidden tabindex="-1">
+      <h2>알림 신청을 받았어요</h2>
+      <p>정식 오픈 때 가장 먼저 연락드리겠습니다. 만 14세 미만이시거나 마음이 바뀌면 개인정보 삭제 페이지에서 언제든 지울 수 있습니다.</p>
+      <p class="test-note" id="testNote" hidden>테스트 모드: 저장 주소가 없어 저장되지 않았습니다.</p>
+      <button class="btn btn-ghost" type="button" id="doneBtn">닫기</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ================================================================
+   설정: 저장 주소와 보여 줄 가격 후보
+   방문할 때마다 prices 중 하나를 무작위로 보여 주고, 시트에서 가격별 클릭률을 비교합니다.
+   특정 가격만 보려면 주소 끝에 ?price=49 처럼 붙이세요.
+   ================================================================ */
+const CONFIG = {
+  endpoint: 'https://script.google.com/macros/s/AKfycbyuTwvr-8_o9bCmygEFbW2Av4n4dnyhoak1RqY8njzo-S0BxegI7JAmGhZuCz2-hgkgkA/exec',
+  prices: [290000, 490000, 790000],
+};
+
+const $ = s => document.querySelector(s);
+const won = n => `${(n / 10000).toLocaleString('ko-KR')}만원`;
+
+/* 가격 정하기 */
+const forced = Number(new URLSearchParams(location.search).get('price'));
+const PRICE = CONFIG.prices.includes(forced * 10000) ? forced * 10000 : CONFIG.prices[Math.floor(Math.random() * CONFIG.prices.length)];
+const VARIANT = `mv:${PRICE / 10000}`;
+$('#price').textContent = won(PRICE);
+
+/* 방문자 ID: 브라우저에 저장하지 않는 임시 ID (새로고침하면 바뀜) */
+const VISITOR = (crypto.randomUUID ? crypto.randomUUID() : `v${Date.now()}${Math.random().toString(36).slice(2)}`);
+
+/* 기록 보내기. 이름·연락처는 넣지 않습니다.
+   이벤트 이름은 기존 저장 코드가 받는 이름을 그대로 씁니다.
+   page_view = 방문, sample_view = 자세히 보기, cta_click = 사전 예약 버튼, form_submit = 알림 신청 */
+function track(event, detail) {
+  if (!CONFIG.endpoint) { console.log('[event]', event, detail, VARIANT); return; }
+  const body = JSON.stringify({ type: 'event', event, visitor: VISITOR, detail: detail || '', package: VARIANT, total: PRICE });
+  const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+  if (!navigator.sendBeacon || !navigator.sendBeacon(CONFIG.endpoint, blob)) {
+    fetch(CONFIG.endpoint, { method: 'POST', mode: 'no-cors', keepalive: true, body }).catch(() => {});
+  }
+}
+function source() {
+  try {
+    const utm = new URLSearchParams(location.search).get('utm_source');
+    if (utm) return utm.slice(0, 40);
+    if (document.referrer) return new URL(document.referrer).hostname.replace(/^www\./, '');
+  } catch {}
+  return '직접';
+}
+track('page_view', source());
+
+/* 자세히 보기 */
+let detailOpened = false;
+$('#moreBtn').addEventListener('click', () => {
+  const d = $('#detail'), open = d.hidden;
+  d.hidden = !open;
+  $('#moreBtn').setAttribute('aria-expanded', String(open));
+  $('#moreBtn').textContent = open ? '접기' : '자세히 보기';
+  if (open) {
+    if (!detailOpened) { track('sample_view', 'detail'); detailOpened = true; }
+    d.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
+});
+
+/* 사전 예약하기 */
+const sheet = $('#sheet');
+document.querySelectorAll('[data-preorder]').forEach(b => b.addEventListener('click', () => {
+  track('cta_click', 'preorder');
+  $('#ask').hidden = false; $('#thanks').hidden = true;
+  sheet.showModal();
+}));
+$('#laterBtn').addEventListener('click', () => { track('cta_click', 'later'); sheet.close(); });
+$('#doneBtn').addEventListener('click', () => sheet.close());
+sheet.addEventListener('click', e => { if (e.target === sheet) sheet.close(); });
+
+/* 오픈 알림 신청 */
+const isContact = v => /^01[016789]-?\d{3,4}-?\d{4}$/.test(v.replace(/\s/g, '')) || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+$('#notifyForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const contact = $('#contact').value.trim();
+  const okContact = isContact(contact), okCheck = $('#c1').checked && $('#c2').checked;
+  $('#eContact').classList.toggle('show', !okContact);
+  $('#contact').setAttribute('aria-invalid', String(!okContact));
+  $('#eCheck').classList.toggle('show', !okCheck);
+  if (!okContact) { $('#contact').focus(); return; }
+  if (!okCheck) { $('#c1').focus(); return; }
+  const btn = $('#notifyBtn'); btn.disabled = true; btn.textContent = '보내는 중…';
+  let saved = false;
+  try {
+    if (CONFIG.endpoint) {
+      const res = await fetch(CONFIG.endpoint, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ type: 'reservation', name: '(시장검증)', contact, parentAge: '', reason: '', packageName: `시장검증 ${won(PRICE)}`, addons: '', total: PRICE }) });
+      const r = await res.json();
+      if (!r.ok) throw new Error('rejected');
+      saved = true;
+    }
+    track('form_submit', 'notify');
+    $('#testNote').hidden = saved;
+    $('#ask').hidden = true; $('#thanks').hidden = false; $('#thanks').focus();
+    e.target.reset();
+  } catch (err) {
+    $('#eCheck').textContent = '전송하지 못했습니다. 잠시 후 다시 시도해 주세요.';
+    $('#eCheck').classList.add('show');
+  } finally { btn.disabled = false; btn.textContent = '오픈 알림 받기'; }
+});
+
+/* QR 모양 그림 (스캔되지 않는 장식) */
+(() => {
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const inF = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+  let c = ''; for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) if (!inF(x, y) && rnd() > .52) c += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  const f = (x, y) => `<path fill-rule="evenodd" d="M${x} ${y}h7v7h-7zM${x + 1} ${y + 1}v5h5v-5z"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3"/>`;
+  document.querySelectorAll('[data-qr]').forEach(s => { s.innerHTML = `<g fill="#283139">${c}${f(0, 0)}${f(18, 0)}${f(0, 18)}</g>`; });
+})();
+</script>
+</body>
+</html>
